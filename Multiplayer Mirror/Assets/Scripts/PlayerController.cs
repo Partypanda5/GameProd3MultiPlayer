@@ -1,8 +1,9 @@
 using UnityEngine;
+using Mirror;
 
 [RequireComponent(typeof(CharacterController))]
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     public float walkingSpeed = 7.5f;
     public float runningSpeed = 11.5f;
@@ -21,6 +22,11 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        if (!isLocalPlayer)
+        {
+            playerCamera.gameObject.SetActive(false);
+        }
+
         characterController = GetComponent<CharacterController>();
 
         // Lock cursor
@@ -30,6 +36,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        if (!isLocalPlayer) 
+        {
+            return;
+        }
 
         // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward);
